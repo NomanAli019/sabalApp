@@ -16,9 +16,9 @@ class _CanopyDetailsPage extends State<CanopyDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFDCE6F7),
+      backgroundColor: Color(0xFFF2F6FC),
       appBar: AppBar(
-        backgroundColor: Color(0xFFDCE6F7),
+        backgroundColor: Color(0xFFF2F6FC),
         title: Text("Canopy Details" , style: TextStyle(fontWeight: FontWeight.w500),),
         centerTitle: true,
       ),
@@ -116,7 +116,7 @@ class _CanopyDetailsPage extends State<CanopyDetailsPage> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 10.0),
+                    const SizedBox(height: 7.0),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -169,7 +169,7 @@ class _CanopyDetailsPage extends State<CanopyDetailsPage> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 10.0),
+                    const SizedBox(height: 7.0),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -190,7 +190,7 @@ class _CanopyDetailsPage extends State<CanopyDetailsPage> {
             ),
             SizedBox(height: 7,),
             Row(
-              // Center-align the button
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 ElevatedButton(
                   style: elevatedButtonStyle(isTrackSelected),
@@ -202,7 +202,6 @@ class _CanopyDetailsPage extends State<CanopyDetailsPage> {
                   },
                   child: Text("Track"),
                 ),
-                SizedBox(width: 20,),
                 ElevatedButton(
                   style: elevatedButtonStyle(isReadySelected),
                   onPressed: () {
@@ -213,7 +212,6 @@ class _CanopyDetailsPage extends State<CanopyDetailsPage> {
                   },
                   child: Text("Ready"),
                 ),
-                SizedBox(width: 20,),
                 ElevatedButton(
                   style: elevatedButtonStyle(isFoldSelected),
                   onPressed: () {
@@ -224,7 +222,6 @@ class _CanopyDetailsPage extends State<CanopyDetailsPage> {
                   },
                   child: Text("Fold"),
                 ),
-                SizedBox(width: 20,),
                 ElevatedButton(
                   style: elevatedButtonStyle(isUnfoldSelected),
                   onPressed: () {

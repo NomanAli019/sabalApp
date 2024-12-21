@@ -41,15 +41,14 @@ class _IndexPageState extends State<indexpage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFDCE6F7), // Background color
+      backgroundColor: Color(0xFFF2F6FC), // Background color
       body: Padding(
-        padding: const EdgeInsets.only(top: 60.0, left: 11.0, right: 11.0),
+        padding: const EdgeInsets.only(top: 20.0, left: 11.0, right: 11.0),
         child: ListView(
           children: [
             SizedBox(height: 20),
             Row(
               children: [
-                // Text "Sabal" at the start
                 Text(
                   "Sabal",
                   style: headings(),
@@ -166,43 +165,52 @@ class _IndexPageState extends State<indexpage> {
               ),
             ),
             SizedBox(
-              height: 250,
-              child: SingleChildScrollView(
-                child: Column(
-                  children: fleetdata.map((data) {
-                    int index = fleetdata.indexOf(data); // Get the index of the current item
-                    return Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border(bottom: BorderSide(color: Colors.grey.shade300)),
-                      ),
-                      child: Row(
-                        children: [
-                          Expanded(child: Center(child: Text(data["Fleet"]!))),
-                          Expanded(child: Center(child: Text(data["Status"]!))),
-                          Expanded(child: Center(child: Text(data["kW"]!))),
-                          Expanded(child: Center(child: Text(data["Error"]!))),
-                          Radio(
-                            value: index,
-                            groupValue: isSelectedList[index] ? index : null,
-                            onChanged: (value) {
-                              setState(() {
-                                isSelectedList[index] = !isSelectedList[index];
-                                print(isSelectedList[index] ? "One selected" : "Unselected");
-                              });
-                            },
-                            activeColor: Colors.green,
+                height: 250,
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: fleetdata.asMap().entries.map((entry) {
+                      int index = entry.key;
+                      Map<String, String> data = entry.value;
+                      return Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          border: Border(
+                            bottom: BorderSide(color: Colors.grey.shade300),
                           ),
-                        ],
-                      ),
-                    );
-                  }).toList(),
+                          borderRadius: index == fleetdata.length - 1
+                              ? BorderRadius.only(
+                            bottomLeft: Radius.circular(20),
+                            bottomRight: Radius.circular(20),
+                          )
+                              : BorderRadius.zero,
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(child: Center(child: Text(data["Fleet"]!))),
+                            Expanded(child: Center(child: Text(data["Status"]!))),
+                            Expanded(child: Center(child: Text(data["kW"]!))),
+                            Expanded(child: Center(child: Text(data["Error"]!))),
+                            Radio(
+                              value: index,
+                              groupValue: isSelectedList[index] ? index : null,
+                              onChanged: (value) {
+                                setState(() {
+                                  isSelectedList[index] = !isSelectedList[index];
+                                  print(isSelectedList[index] ? "One selected" : "Unselected");
+                                });
+                              },
+                              activeColor: Colors.green,
+                            ),
+                          ],
+                        ),
+                      );
+                    }).toList(),
+                  ),
                 ),
               ),
-            ),
             SizedBox(height: 25),
             Row(
-              // Center-align the button
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 ElevatedButton(
                   style: elevatedButtonStyle(isTrackSelected),
@@ -214,7 +222,6 @@ class _IndexPageState extends State<indexpage> {
                   },
                   child: Text("Track"),
                 ),
-                SizedBox(width: 20,),
                 ElevatedButton(
                   style: elevatedButtonStyle(isReadySelected),
                   onPressed: () {
@@ -225,7 +232,6 @@ class _IndexPageState extends State<indexpage> {
                   },
                   child: Text("Ready"),
                 ),
-                SizedBox(width: 20,),
                 ElevatedButton(
                   style: elevatedButtonStyle(isFoldSelected),
                   onPressed: () {
@@ -236,7 +242,6 @@ class _IndexPageState extends State<indexpage> {
                   },
                   child: Text("Fold"),
                 ),
-                SizedBox(width: 20,),
                 ElevatedButton(
                   style: elevatedButtonStyle(isUnfoldSelected),
                   onPressed: () {
@@ -272,7 +277,7 @@ class _IndexPageState extends State<indexpage> {
                 ),
               ),
             ),
-            SizedBox(height: 20,),
+            SizedBox(height: 40,),
             Padding(
               padding: const EdgeInsets.only(left: 30, right: 30),
               child: Text(

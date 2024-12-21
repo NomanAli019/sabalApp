@@ -4,9 +4,9 @@ class SettingS extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFDCE6F7),
+      backgroundColor: Color(0xFFF2F6FC),
       appBar: AppBar(
-        backgroundColor: Color(0xFFDCE6F7),
+        backgroundColor: Color(0xFFF2F6FC),
         title: Text("Setting", style: TextStyle(fontWeight: FontWeight.w500),),
         centerTitle: true,
       ),

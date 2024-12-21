@@ -72,7 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFDCE6F7),
+      backgroundColor: Color(0xFFF2F6FC),
       body: Padding(
         padding: const EdgeInsets.only(top: 60.0, left: 11.0, right: 11.0),
         child: ListView(
