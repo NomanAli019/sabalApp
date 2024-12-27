@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-
 import '../themes/LoginPageThemes/canopydetailstheme.dart';
 import '../themes/LoginPageThemes/hometheme.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+
 
 
 class CanopyDetailsPage extends StatefulWidget {
@@ -13,6 +16,47 @@ class _CanopyDetailsPage extends State<CanopyDetailsPage> {
   bool isReadySelected = false;
   bool isFoldSelected = false;
   bool isUnfoldSelected = false;
+
+
+  Future<void> readHoldingRegisters() async {
+    const String url = 'http://192.168.18.120:5000/read-holding-registers';
+
+    try {
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        print("Holding Registers: ${data['Holding Registers']}");
+      } else {
+        print("Error: ${response.statusCode} ${response.body}");
+      }
+    } catch (e) {
+      print("Exception: $e");
+    }
+  }
+
+  Future<void> writeHoldingRegister(int address, int value) async {
+    const String url = 'http://192.168.18.120:5000/write-holding-register';
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'address': address,
+          'value': value,
+        }),
+      );
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        print("Message: ${data['Message']}");
+      } else {
+        print("Error: ${response.statusCode} ${response.body}");
+      }
+    } catch (e) {
+      print("Exception: $e");
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -198,7 +242,7 @@ class _CanopyDetailsPage extends State<CanopyDetailsPage> {
                     setState(() {
                       isTrackSelected = !isTrackSelected; // Toggle the button color state
                     });
-                    print("Track button clicked");
+                    writeHoldingRegister(1,1);
                   },
                   child: Text("Track"),
                 ),
@@ -208,7 +252,7 @@ class _CanopyDetailsPage extends State<CanopyDetailsPage> {
                     setState(() {
                       isReadySelected = !isReadySelected; // Toggle the button color state
                     });
-                    print("Ready button clicked");
+                    writeHoldingRegister(1,2);
                   },
                   child: Text("Ready"),
                 ),
@@ -218,7 +262,7 @@ class _CanopyDetailsPage extends State<CanopyDetailsPage> {
                     setState(() {
                       isFoldSelected = !isFoldSelected; // Toggle the button color state
                     });
-                    print("Fold button clicked");
+                    writeHoldingRegister(1,3);
                   },
                   child: Text("Fold"),
                 ),
@@ -228,7 +272,7 @@ class _CanopyDetailsPage extends State<CanopyDetailsPage> {
                     setState(() {
                       isUnfoldSelected = !isUnfoldSelected; // Toggle the button color state
                     });
-                    print("Unfold button clicked");
+                    writeHoldingRegister(1,4);
                   },
                   child: Text("Unfold"),
                 ),
