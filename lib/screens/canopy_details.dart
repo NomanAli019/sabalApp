@@ -3,7 +3,7 @@ import '../themes/LoginPageThemes/canopydetailstheme.dart';
 import '../themes/LoginPageThemes/hometheme.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 
 
@@ -12,6 +12,80 @@ class CanopyDetailsPage extends StatefulWidget {
   _CanopyDetailsPage createState() => _CanopyDetailsPage();
 }
 class _CanopyDetailsPage extends State<CanopyDetailsPage> {
+
+
+  late WebSocketChannel channel;
+  late Stream stream;
+
+  String faultMessage = "No faults detected"; // Default fault message
+  String imagePath = 'assets/images/nofault.png'; // Default image for no faults
+
+  @override
+  void initState() {
+    super.initState();
+    // Connect to your FastAPI WebSocket endpoint
+    channel = WebSocketChannel.connect(
+      Uri.parse('ws://192.168.18.120:5000/ws/read-input-registers'), // Replace with your WebSocket URL
+    );
+
+    // Listen for incoming data
+    stream = channel.stream;
+    stream.listen((data) {
+      _processSocketData(data);
+    });
+  }
+  void _processSocketData(String data) {
+    try {
+      // Replace single quotes with double quotes
+      data = data.replaceAll("'", "\"");
+
+      final receivedData = jsonDecode(data) as Map<String, dynamic>;
+      int faultCode = receivedData['Fault Code'] ?? 0;
+
+      // Define a variable for the image path
+      String imagePath;
+
+      // Set the image path based on the fault code
+      switch (faultCode) {
+        case 0:
+          imagePath = 'assets/images/nofault.png'; // No faults
+          break;
+        case 1:
+          imagePath = 'assets/images/faulty.png'; // Mode Error
+          break;
+        case 2:
+          imagePath = 'assets/images/tiltL.png'; // Tilt Angle Fault
+          break;
+        case 3:
+          imagePath = 'assets/images/tiltR.png'; // High Wind Speed Fault
+          break;
+        default:
+          imagePath = 'assets/images/nofault.png'; // Default for unknown faults
+      }
+
+      // Update the state with the new image path
+      setState(() {
+        this.imagePath = imagePath;
+      });
+
+      // Print the fault code and image path
+      print("Received fault code: $faultCode");
+      print("Image path: $imagePath");
+    } catch (e) {
+      print("Error processing WebSocket data: $e");
+    }
+  }
+
+
+
+
+  @override
+  void dispose() {
+    channel.sink.close(); // Close the WebSocket connection
+    super.dispose();
+  }
+
+
   bool isTrackSelected = false;
   bool isReadySelected = false;
   bool isFoldSelected = false;
@@ -73,16 +147,29 @@ class _CanopyDetailsPage extends State<CanopyDetailsPage> {
             Container(
               width: double.infinity, // Full width
               height: 140.0,          // Custom height
-              child:ClipRRect(
+              child: ClipRRect(
                 borderRadius: BorderRadius.all(
                   Radius.circular(10), // Match the container's border radius
                 ),
                 child: Image.asset(
-                  'assets/images/signal-2024-02-14-110631_004 1.png', // Use the relative path here
-                  fit: BoxFit.cover,          // Adjust the image to fit the container
+                  imagePath,         // Dynamic image path
+                  fit: BoxFit.cover, // Adjust the image to fit the container
                 ),
               ),
             ),
+            // Container(
+            //   width: double.infinity, // Full width
+            //   height: 140.0,          // Custom height
+            //   child:ClipRRect(
+            //     borderRadius: BorderRadius.all(
+            //       Radius.circular(10), // Match the container's border radius
+            //     ),
+            //     child: Image.asset(
+            //       'assets/images/nofault.png', // Use the relative path here
+            //       fit: BoxFit.cover,          // Adjust the image to fit the container
+            //     ),
+            //   ),
+            // ),
             SizedBox(height: 10,),
 
           Card(
